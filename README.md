@@ -1,3 +1,3 @@
 # Pi / NeoPixel News & Weather
 
-Using NeoPixels to create a Python news &amp; weather information screen. 
+Using Raspberry Pi, Python, and NeoPixels to create a news &amp; weather information screen. 
