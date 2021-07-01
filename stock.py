@@ -3,6 +3,7 @@ import os
 import requests
 import sched, time
 import threading
+from collections import OrderedDict
 
 load_dotenv()
 
@@ -10,7 +11,7 @@ API_KEY = os.getenv('STOCK_KEY')
 
 class Stock:
     def __init__(self):
-        self.prices = {}
+        self.prices = OrderedDict()
         for ticker in os.getenv('STOCK_TICKERS').split(','):
             self.prices[ticker] = None
         self.prices['SPY'] = None
@@ -22,6 +23,12 @@ class Stock:
     def getCurrentPrices(self):
         return self.prices
 
+    def isMissingPrice(self):
+        for price in self.prices:
+            if self.prices[price] is None:
+                return True
+        return False
+
     def runPollingThread(self):
         self.schedule.enter(1, 1, self.fetchNextPrice)
         self.schedule.run()
@@ -31,7 +38,7 @@ class Stock:
         self.pollingQueue.remove(ticker)
         self.fetchPrice(ticker)
         self.pollingQueue.append(ticker)
-        self.schedule.enter(15, 1, self.fetchNextPrice)
+        self.schedule.enter(15 if self.isMissingPrice() else 300, 1, self.fetchNextPrice)
 
     def fetchPrice(self, ticker):
         price = None
@@ -45,4 +52,6 @@ class Stock:
         if price is None:
             print('Error polling price for {}, {} : {}'.format(ticker, response.status_code, data))
         else:
-            self.prices[ticker] = price
+            self.prices[ticker] = float(price[:-1])
+
+stock = Stock()
