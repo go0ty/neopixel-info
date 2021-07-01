@@ -38,7 +38,7 @@ class Stock:
         self.pollingQueue.remove(ticker)
         self.fetchPrice(ticker)
         self.pollingQueue.append(ticker)
-        self.schedule.enter(20 if self.isMissingPrice() else 300, 1, self.fetchNextPrice)
+        self.schedule.enter(30 if self.isMissingPrice() else 600, 1, self.fetchNextPrice)
 
     def fetchPrice(self, ticker):
         price = None
