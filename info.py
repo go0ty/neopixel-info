@@ -34,16 +34,17 @@ def getRowIndices(spyPercent):
         row = 6
     else:
         row = 7
-    indices = [ row * 8 ]
+    firstPixel = row * 8
+    indices = [ firstPixel ]
     for x in range(1, 8):
-        indices.append(row + x)
+        indices.append(firstPixel + x)
     return indices
 
 def setSpyBar(percentChange):
     if percentChange is not None:
         rowIndices = getRowIndices(percentChange)
         for pixel in rowIndices:
-            pixels[pixel] = (75, 75, 75)
+            pixels[pixel] = (50, 50, 50)
 
 def setPixelsForStock(percentChange, column):
     indices = getColumnIndices(column)
@@ -77,4 +78,4 @@ while True:
         else:
             setPixelsForStock(percentChange, index)
     pixels.show()
-    time.sleep(60)
+    time.sleep(30)
