@@ -12,9 +12,9 @@ API_KEY = os.getenv('STOCK_KEY')
 class Stock:
     def __init__(self):
         self.prices = OrderedDict()
+        self.prices['SPY'] = None
         for ticker in os.getenv('STOCK_TICKERS').split(','):
             self.prices[ticker] = None
-        self.prices['SPY'] = None
         self.pollingQueue = list(self.prices.keys())
         self.schedule = sched.scheduler(time.time, time.sleep)
         pollingThread = threading.Thread(target=self.runPollingThread)
@@ -38,7 +38,7 @@ class Stock:
         self.pollingQueue.remove(ticker)
         self.fetchPrice(ticker)
         self.pollingQueue.append(ticker)
-        self.schedule.enter(15 if self.isMissingPrice() else 300, 1, self.fetchNextPrice)
+        self.schedule.enter(30 if self.isMissingPrice() else 300, 1, self.fetchNextPrice)
 
     def fetchPrice(self, ticker):
         price = None

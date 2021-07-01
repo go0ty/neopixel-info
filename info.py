@@ -2,7 +2,7 @@ import board
 import neopixel
 import time
 import sys
-from .stock import Stock
+from stock import Stock
 
 pixels = neopixel.NeoPixel(board.D18, 64, auto_write=False, brightness=0.2)
 pixels.fill((0, 0, 0))
@@ -15,6 +15,35 @@ def getColumnIndices(column):
     for x in range(0, 8):
         indices.append(column + (8 * x))
     return indices
+
+def getRowIndices(spyPercent):
+    row = None
+    if spyPercent >= 4:
+        row = 0
+    elif spyPercent >= 3:
+        row = 1
+    elif spyPercent >= 2:
+        row = 2
+    elif spyPercent >= 1:
+        row = 3
+    elif spyPercent >= 0:
+        row = 4
+    elif spyPercent >= -1:
+        row = 5
+    elif spyPercent >= -2:
+        row = 6
+    else:
+        row = 7
+    indices = [ row * 8 ]
+    for x in range(1, 8):
+        indices.append(row + x)
+    return indices
+
+def setSpyBar(percentChange):
+    if percentChange is not None:
+        rowIndices = getRowIndices(percentChange)
+        for pixel in rowIndices:
+            pixels[pixel] = (75, 75, 75)
 
 def setPixelsForStock(percentChange, column):
     indices = getColumnIndices(column)
@@ -44,8 +73,8 @@ def setPixelsForStock(percentChange, column):
 while True:
     for index, (ticker, percentChange) in enumerate(stock.getCurrentPrices().items()):
         if ticker == 'SPY':
-            pass
+            setSpyBar(percentChange)
         else:
             setPixelsForStock(percentChange, index)
     pixels.show()
-    time.sleep(20)
+    time.sleep(60)
