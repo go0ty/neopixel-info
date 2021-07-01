@@ -3,7 +3,6 @@ import os
 import requests
 import sched, time
 import threading
-import sys
 
 load_dotenv()
 

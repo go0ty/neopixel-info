@@ -4,12 +4,7 @@ import time
 import sys
 from .stock import Stock
 
-pixels = neopixel.NeoPixel(board.D18, 64, auto_write=False, brightness=0.2, pixel_order=neopixel.RGB)
-pixels[0] = (255,0,0)
-pixels[63] = (0,255,0)
-pixels[7] = (0,0,255)
-pixels.show()
-sys.exit(1)
+pixels = neopixel.NeoPixel(board.D18, 64, auto_write=False, brightness=0.2)
 
 stock = Stock()
 
