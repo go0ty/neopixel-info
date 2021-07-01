@@ -11,9 +11,10 @@ API_KEY = os.getenv('STOCK_KEY')
 
 class Stock:
     def __init__(self):
-        self.prices = { 'SPY': None }
+        self.prices = {}
         for ticker in os.getenv('STOCK_TICKERS').split(','):
             self.prices[ticker] = None
+        self.prices['SPY'] = None
         self.pollingQueue = list(self.prices.keys())
         self.schedule = sched.scheduler(time.time, time.sleep)
         pollingThread = threading.Thread(target=self.runPollingThread)
@@ -46,8 +47,3 @@ class Stock:
             print('Error polling price for {}, {} : {}'.format(ticker, response.status_code, data))
         else:
             self.prices[ticker] = price
-
-
-
-stock = Stock()
-print(stock.getCurrentPrices())
